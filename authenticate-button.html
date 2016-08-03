@@ -1,0 +1,69 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/social-icons.html">
+<link rel="import" href="../polymerfire/firebase-auth.html">
+<link rel="import" href="../paper-toast/paper-toast.html">
+
+<dom-module id="authenticate-button">
+  <template>
+    <style>
+      iron-icon {
+        margin-right: 20px;
+      }
+      .button-img {
+        height: 50px;
+      }
+    </style>
+    
+    <firebase-auth id="auth" provider$="[[mode]]" on-error="handleError">
+    </firebase-auth>
+
+    <paper-button raised on-click="handleClick">
+      <img class="button-img" src$="./images/[[mode]].svg"/>
+    </paper-button>
+
+    <paper-toast
+      id="loginfailedtoast"
+      text="Login Failed">
+    </paper-toast>
+  </template>
+  <script>
+    Polymer({
+      is: 'authenticate-button',
+
+      properties: {
+        mode: {
+          type: String,
+          reflectToAttributre: true,
+          notify: true,
+          value: ''
+        }
+      },
+
+      /*
+       * Handles clicking on the button
+       */
+      handleClick: function() {
+        this.$.auth.signInWithPopup()
+        .then( (response)=> {
+          // successful authentication response here
+          this.fire('login-success', {
+            user: response
+          });
+        })
+        .catch( (error)=> {
+          // unsuccessful authentication
+          this.$.loginfailedtoast.open();
+        });
+      },
+
+      /*
+       *  Opens login failed toast when login unsuccessful
+       */
+      handleError: function() {
+        this.$.loginfailedtoast.open();
+      }
+    });
+  </script>
+</dom-module>
