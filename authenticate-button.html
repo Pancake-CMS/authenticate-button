@@ -19,7 +19,7 @@
     <firebase-auth id="auth" provider$="[[mode]]" on-error="handleError">
     </firebase-auth>
 
-    <paper-button raised on-click="handleClick">
+    <paper-button raised on-click="handleClick" disabled$="[[disabled]]">
       <img class="button-img" src$="../authenticate-button/images/[[mode]].svg"/>
     </paper-button>
 
@@ -35,9 +35,16 @@
       properties: {
         mode: {
           type: String,
-          reflectToAttributre: true,
+          reflectToAttribute: true,
           notify: true,
           value: ''
+        },
+
+        disabled: {
+          type: Boolean,
+          reflectToAttribute: true,
+          notify: true,
+          value: false
         }
       },
 
